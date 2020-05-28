@@ -1,5 +1,4 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 
 export const styles = StyleSheet.create({
     container: {
@@ -19,9 +18,9 @@ export const styles = StyleSheet.create({
     },
     text: {
         color: "red",
-        fontSize: 28,
-        marginBottom: 20,
-        marginHorizontal: 40,
+        // fontSize: 24,
+        marginBottom: 6,
+        // marginHorizontal: 40,
     },
     input: {
         color: "#000080",
@@ -41,7 +40,7 @@ export const styles = StyleSheet.create({
         borderWidth: 2,
         height: 56,
         borderRadius: 8,
-        marginHorizontal: 130,
+        marginHorizontal: 94,
         padding: 10,
         marginTop: 30
 
@@ -51,6 +50,117 @@ export const styles = StyleSheet.create({
         textAlign: "center",
         color: "#32cd32",
         
-    }
+    },
+    modalView: {
+      // ...Platform.select({
+      //   ios: {
+      //     marginTop: 220,
+      //     marginBottom: 240,
+      //   },
+      //   android: {
+      //     marginTop: 100,
+      //     marginBottom: 200,
+      //   },
+      // }),
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+      marginHorizontal: 30,
+      backgroundColor: "#d3d3d3",
+      borderRadius: 20,
+      padding: 15,
+      shadowColor: "#000",
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.7,
+      shadowRadius: 3.84,
+      elevation: 5,
+    },
+    modalInput: {
+      ...Platform.select({
+        ios: { marginBottom: 120 },
+        android: { marginBottom: 50 },
+      }),
+      color: "#191970",
+      fontFamily: "cabin700",
+      padding: 10,
+      width: "95%",
+      height: "15%",
+      borderRadius: 10,
+      shadowColor: "#000",
+      shadowOffset: {
+        width: 9,
+        height: 9,
+      },
+      shadowOpacity: 0.7,
+      shadowRadius: 3.84,
+      elevation: 5,
+      backgroundColor: "#f0fff0",
+    },
+    modalBtns: {
+      flexDirection: "row",
+      width: "100%",
+      justifyContent: "space-around",
+      opacity: 1,
+    },
+    modalBtnSave: {
+      ...Platform.select({
+        ios: {
+          backgroundColor: "#faf0e6",
+          padding: 5,
+          width: "40%",
+          borderRadius: 50,
+          shadowColor: "#000",
+          shadowOffset: {
+            width: 0,
+            height: 2,
+          },
+          shadowOpacity: 0.7,
+          shadowRadius: 3.84,
+          // elevation: 5,
+        },
+        android: {
+          shadowColor: "#000",
+          shadowOffset: {
+            width: 0,
+            height: 2,
+          },
+          shadowOpacity: 0.7,
+          shadowRadius: 3.84,
+          elevation: 5,
+        },
+      }),
+    },
+    modalBtnCnsl: {
+      ...Platform.select({
+        ios: {
+          backgroundColor: "#f5f5f5",
+          padding: 6,
+          width: "40%",
+          borderRadius: 50,
+          shadowColor: "#000",
+          shadowOffset: {
+            width: 0,
+            height: 2,
+          },
+          shadowOpacity: 0.7,
+          shadowRadius: 3.84,
+          elevation: 5,
+        },
+        android: {
+          shadowColor: "#000",
+          shadowOffset: {
+            width: 0,
+            height: 2,
+          },
+          shadowOpacity: 0.7,
+          shadowRadius: 3.84,
+          elevation: 5,
+        },
+      }),
+      fontWeight: "600",
+    },
   });
   
