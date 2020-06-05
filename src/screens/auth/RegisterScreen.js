@@ -3,15 +3,12 @@ import {useDispatch} from "react-redux";
 import * as ImagePicker from "expo-image-picker";
 import * as Permissions from "expo-permissions";
 import {
-  Alert,
-  Button,
   TouchableOpacity,
   KeyboardAvoidingView,
-  Keyboard,
   Text,
   View,
   TextInput, StyleSheet,
-  Platform, Image, ActivityIndicatorBase
+  Platform
 } from "react-native";
 import { styles } from "../../../Styles";
 import { auth } from "../../../firebase/config";
@@ -24,8 +21,7 @@ const initialState = {
 
 const RegisterScreen = ({ navigation: { navigate } }) => {
   const [state, setState] = useState(initialState);
-  const [message, setmessage] = useState(null);
-  const [avatar, setAvatar] = useState("https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcR3f9NC9AOGGOhiz0_jrzZIM6mQIASnNme8z6b2BV_lgLkT_ktd&usqp=CAU");
+  // const [avatar, setAvatar] = useState("");
   const dispatch = useDispatch();
 
   // обновление инф о пользователе
@@ -49,26 +45,25 @@ const RegisterScreen = ({ navigation: { navigate } }) => {
     }
   };
 
-  const takePhoto = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    setAvatar(result.uri);
-  };
+  // const takePhoto = async () => {
+  //   let result = await ImagePicker.launchImageLibraryAsync({
+  //     mediaTypes: ImagePicker.MediaTypeOptions.All,
+  //     allowsEditing: true,
+  //     aspect: [4, 3],
+  //     quality: 1,
+  //   });
+  //   setAvatar(result.uri);
+  // };
 
   const currentUser = async () => {
     const currentUser = await auth.currentUser;
     console.log("currentUser", currentUser);
-    dispatch({
+   dispatch({
       type: "CURRENT_USER",
       payload: {
         userName: currentUser.displayName,
         userId: currentUser.uid,
-        avatar: currentUser.photoURL,
+        // avatar: currentUser.photoURL,
       },
     });
   };
@@ -80,7 +75,7 @@ const RegisterScreen = ({ navigation: { navigate } }) => {
 
     await user.user.updateProfile({
       displayName: displayName,
-      photoURL: avatar,
+      // photoURL: avatar,
     });
   } catch (error) {
     console.log(error);
@@ -96,21 +91,19 @@ const RegisterScreen = ({ navigation: { navigate } }) => {
       style={styles.container}
     >
       <View>
-      <TouchableOpacity onPress={takePhoto}>
+      {/* <TouchableOpacity onPress={takePhoto}>
       <Image
                 style={{
                   width: 100,
                   height: 100,
                   borderRadius: 50,
-                  // position: "absolute",
-                  // top: "5%",
                   right: "-40%"
                 }}
 
                 source={{uri: avatar}}
           />
       
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <Text style={styles.text}>UserName*</Text>
         <TextInput
           autoCapitalize={"none"}

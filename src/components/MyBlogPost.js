@@ -5,25 +5,11 @@ import MapModalWindow from "../components/MapModalWindow";
 import CommentsModalWindow from "./CommentsModalWindow";
 import { firestore } from "../../firebase/config";
 
-const Post = ({ post }) => {
+const MyBlogPost = ({ post }) => {
   const [showModal, setShowModal] = useState(false);
   const [showModalCmnts, setShowModalCmnts] = useState(false);
 
-  const getCurrentUserPost = async (id) => {
-    const data = await firestore.collection("posts").doc(id).get();
-    console.log('likes', post.id)
 
-    if (data.data().likes === "") {
-      await data.data().likes == 0;
-    }
-
-    await firestore
-      .collection("posts")
-      .doc(id)
-      .update({
-        likes: Number(data.data().likes) + 1,
-      });
-  };
 
   return (
     <>
@@ -67,7 +53,7 @@ const Post = ({ post }) => {
               justifyContent: "flex-end",
               alignItems: "center",
             }}
-            onPress={() => getCurrentUserPost(post.id)}
+            // onPress={() => getCurrentUserPost(post.id)}
           >
             <View
               style={{
@@ -129,4 +115,4 @@ const Post = ({ post }) => {
   );
 };
 
-export default Post;
+export default MyBlogPost;

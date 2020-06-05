@@ -14,14 +14,9 @@ export default function HomeScreen() {
     currentUser();
   }, [userId]);
 
-  // useEffect(() => {
-  //   getAllPosts();
-  // }, [userPosts]);
-
-  // взять информацию (ид-юзера, и т.д.) текущего юзера
   const currentUser = async () => {
     const currentUser = await auth.currentUser;
-    const data = await firestore.collection("posts").onSnapshot((data) =>
+    await firestore.collection("posts").onSnapshot((data) =>
       setAllPosts(
         data.docs.map((doc) => {
           // console.log('doc.id', doc.id)

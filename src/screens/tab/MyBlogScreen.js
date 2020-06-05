@@ -12,7 +12,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { styles } from "../../../Styles";
 import { auth, firestore } from "../../../firebase/config";
-import Post from '../../components/Post';
+import MyBlogPost from '../../components/MyBlogPost';
 
 export default function MyBlogScreen () {
   const dispatch = useDispatch();
@@ -54,9 +54,9 @@ export default function MyBlogScreen () {
     <>
       <View style={styles.container}>
         <FlatList
-          keyExtractor={(item) => item.userId}
+          keyExtractor={(item, idx) => idx.toString()}
           data={allPosts}
-          renderItem={({ item }) =>(<Post post={item} />)}
+          renderItem={({ item }) =>(<MyBlogPost post={item} />)}
         />
       </View>
     </>

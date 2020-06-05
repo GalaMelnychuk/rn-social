@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { TouchableOpacity, Text, View, Image, Alert } from "react-native";
+import {
+  TouchableOpacity,
+  Keyboard,
+  Text,
+  View,
+  Image,
+  Alert,
+  TextInput,
+} from "react-native";
 import { useSelector } from "react-redux";
 import { Camera } from "expo-camera";
 import * as Location from "expo-location";
@@ -14,17 +22,12 @@ export default function AddPostScreen() {
   const [picture, setPicture] = useState("");
   const [postDescription, setPostDescription] = useState("");
 
-  if (hasPermission === false) {
-    return <Text>No access to camera</Text>;
-  }
-  
   useEffect(() => {
     (async () => {
       const { status } = await Camera.requestPermissionsAsync();
       setHasPermission(status === "granted");
     })();
   }, []);
-
 
   useEffect(() => {
     (async () => {
@@ -38,30 +41,30 @@ export default function AddPostScreen() {
   const snap = async () => {
     if (takePhoto) {
       let photo = await takePhoto.takePictureAsync();
+      console.log("photo.uri", photo.uri);
       setPicture(photo.uri);
-      handelUpload(photo.uri)
     }
   };
 
-  const handelUpload = async (img) => {
+  const handlerlUpload = async (img) => {
     const response = await fetch(img);
     const file = await response.blob();
-    const uniquePostsId = Date.now().toString();
+    const photoName = Date.now().toString();
 
-    await storage.ref(`image/${uniquePostsId}`).put(file);
+    await storage.ref(`image/${photoName}`).put(file);
 
-    const urlPosts = await storage
+    const photoUrl = await storage
       .ref("image")
-      .child(uniquePostsId)
+      .child(photoName)
       .getDownloadURL();
-
-    createPost(urlPosts);
+    setPostDescription("");
+    createPost(photoUrl);
   };
 
   const createPost = async (imgUrl) => {
-   let location = await Location.getCurrentPositionAsync({});
+    let location = await Location.getCurrentPositionAsync({});
 
-   await firestore.collection("posts").add({
+    await firestore.collection("posts").add({
       image: imgUrl,
       userId,
       userName,
@@ -69,14 +72,12 @@ export default function AddPostScreen() {
         latitude: location.coords.latitude,
         longitude: location.coords.longitude,
       },
-      avatar: "",
+      // avatar: "",
       comments: [],
       description: postDescription,
-      likes:''
+      likes: "",
     });
-
-    await setPicture("");
-   
+    Keyboard.dismiss();
   };
 
   return (
@@ -84,27 +85,44 @@ export default function AddPostScreen() {
       {picture ? (
         <Image
           source={{ uri: picture }}
-          style={{ width: 350, height: 200, margin: 4 }}
+          style={{
+            width: 350,
+            height: 200,
+            margin: 8,
+            alignItems: "center",
+            justifyContent: "center",
+            borderRadius: 10,
+          }}
         />
       ) : (
         <Camera
           ref={(ref) => setTakePhoto(ref)}
-          style={{ width: 360, height: 220, margin: 4 }}
+          style={{ width: "100%", height: 250 }}
           type={type}
         >
           <View
             style={{
               flex: 1,
-              backgroundColor: "transparent",
               flexDirection: "row",
+              justifyContent: "space-between",
             }}
           >
+            <TouchableOpacity onPress={snap}>
+              <Image
+                style={{
+                  width: 50,
+                  height: 50,
+                  borderRadius: 50,
+                  marginTop: 14,
+                  marginLeft: 6,
+                }}
+                source={{
+                  uri:
+                    "https://lh3.googleusercontent.com/UEhZQtc_3LCwkKIayRjHG63EfC9bsXvJjuWiFMvVRAe_tHyk0pW4ZmCBJQCENxmYlYk",
+                }}
+              />
+            </TouchableOpacity>
             <TouchableOpacity
-              style={{
-                flex: 0.1,
-                alignSelf: "flex-end",
-                alignItems: "center",
-              }}
               onPress={() => {
                 setType(
                   type === Camera.Constants.Type.back
@@ -113,36 +131,53 @@ export default function AddPostScreen() {
                 );
               }}
             >
-              <Text style={{ fontSize: 18, marginBottom: 10, color: "white" }}>
-                Flip
-              </Text>
+              <Image
+                style={{
+                  width: 50,
+                  height: 50,
+                  borderRadius: 50,
+                  marginTop: 14,
+                  marginRight: 6,
+                }}
+                source={{
+                  uri:
+                    "https://cdn.dribbble.com/users/100396/screenshots/1220329/flipiconn.png",
+                }}
+              />
             </TouchableOpacity>
           </View>
         </Camera>
       )}
-      <TouchableOpacity
-        style={{
 
-        }}
-        onPress={snap}
-      >
-        <Text style={{ fontSize: 18, marginBottom: 10, color: "#000" }}>
-          take Photo!!
-        </Text>
-      </TouchableOpacity>
-      <TouchableOpacity
+<TouchableOpacity
         style={{}}
         onPress={() => setPicture("")}
       >
         <Text style={{ fontSize: 18, marginBottom: 10, color: "#000" }}>
-          once more take Photo!!
+        redo photo
         </Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={{}}
-        onPress={createPost}
-      >
-        <Text style={{ fontSize: 18, marginBottom: 10, color: "#000" }}>
+        </TouchableOpacity>
+
+      <TextInput
+        autoCapitalize={"none"}
+        autoCorrect={false}
+        style={{
+          width: "75%",
+          borderWidth: 1,
+          borderColor: "#5f9ea0",
+          color: "#5f9ea0",
+          fontWeight: "600",
+          fontSize: 16,
+          backgroundColor: "#fff8dc",
+          borderRadius: 10,
+          padding: 10,
+        }}
+        onChangeText={(value) => setPostDescription(value)}
+        value={postDescription}
+        placeholder="Description..."
+      />
+      <TouchableOpacity style={{ backgroundColor: "red", padding: 8, margin: 18, borderRadius: 4 }} onPress={() => handlerlUpload(picture)}>
+        <Text style={{ fontSize: 18, color: "#000", fontFamily: "openSansLight" }}>
           ADD POST
         </Text>
       </TouchableOpacity>

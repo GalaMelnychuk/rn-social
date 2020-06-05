@@ -16,8 +16,6 @@ export let content = (
   <>
   <Header
   placement="left"
-  leftComponent={{ icon: "menu", color: "#fff" }}
-  centerComponent={{ text: "MY TITLE", style: { color: "#fff" } }}
   rightComponent={LogOut}
 />
   <Tab.Navigator

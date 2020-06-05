@@ -1,15 +1,21 @@
 import React from "react";
-import {
-  Modal,
-  StyleSheet,
-  Button,
-  View,
-} from "react-native";
+import { Modal, StyleSheet, Button, View, Image } from "react-native";
 import MapView, { Marker } from "react-native-maps";
+import { Header } from "react-native-elements";
 
 const MapModalWindow = ({ showModal, onCancelModal, latitude, longitude }) => {
   return (
-    <Modal animationType="slide" visible={showModal} transparent={true}>
+    <Modal animationType="slide" visible={showModal} transparent={false}>
+      <Header
+        placement="center"
+        centerComponent={{
+          text: "Map",
+          style: { color: "#fff", fontSize: 20 },
+        }}
+        leftComponent={() => (
+          <Button color="red" title="Back" onPress={onCancelModal} />
+        )}
+      />
       <View
         style={{
           flex: 2,
@@ -30,34 +36,27 @@ const MapModalWindow = ({ showModal, onCancelModal, latitude, longitude }) => {
         }}
       >
         <MapView
-            // showsUserLocation={true}
-            style={{ ...StyleSheet.absoluteFillObject }}
-          style={{ width: "100%", height: 200 }}
+          style={{ ...StyleSheet.absoluteFillObject }}
           zoomEnabled={true}
-          minZoomLevel={5}
-        >
+          >
           <Marker
-            title="travel location"
+            title="my location"
             coordinate={{
               latitude: latitude,
               longitude: longitude,
             }}
-            
           >
-            {/* <Image
-              style={{
-                width: 30,
-                height: 30,
-                marginBottom: 10,
-                borderRadius: 10,
+            <Image
+              source={{
+                uri: "https://cdn4.iconfinder.com/data/icons/love-colored/512/heart_wings-512.png",
               }}
-              source={require("../../assets/like.png")}
-            /> */}
+              style={{
+                width: 50,
+                height: 50,
+              }}
+            />
           </Marker>
         </MapView>
-        <View style={{ width: 200, height: 200, justifyContent: "center" }}>
-          <Button title="Back" onPress={onCancelModal} />
-        </View>
       </View>
     </Modal>
   );

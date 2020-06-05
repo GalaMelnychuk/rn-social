@@ -12,17 +12,13 @@ export default function LogInScreen({ navigation: {navigate} }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const resetInputs = () => (setEmail(""), setPassword(""));
-
 // логанизация юзера
   const logInUser = async () => {
     try { await auth.signInWithEmailAndPassword(email, password);
-      resetInputs();
     } catch (error) {
       console.log(error);
     }
   };
-
 
   return (
     <KeyboardAvoidingView
