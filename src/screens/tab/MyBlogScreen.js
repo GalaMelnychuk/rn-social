@@ -1,22 +1,22 @@
 import React, { useState, useEffect } from "react";
 import {
-  Alert,
   TouchableOpacity,
-  Keyboard,
   Text,
-  View,
-  StyleSheet,
-  TextInput,
+  View, Alert,
   FlatList,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
+import { Header } from "react-native-elements";
+import { useNavigation } from "@react-navigation/native";
 import { styles } from "../../../Styles";
 import { auth, firestore } from "../../../firebase/config";
-import MyBlogPost from '../../components/MyBlogPost';
 
-export default function MyBlogScreen () {
+import MyBlogPost from "../../components/MyBlogPost";
+
+export default function MyBlogScreen() {
   const dispatch = useDispatch();
   const [allPosts, setAllPosts] = useState([]);
+  const navigation = useNavigation();
   const { userId, userPosts } = useSelector((state) => state.user);
 
   useEffect(() => {
@@ -24,9 +24,9 @@ export default function MyBlogScreen () {
     getAllPosts();
   }, [userId]);
 
-  // useEffect(() => {
-  //   getAllPosts();
-  // }, [userPosts]);
+  useEffect(() => {
+    getAllPosts();
+  }, []);
 
   // взять информацию (ид-юзера, и т.д.) текущего юзера
   const currentUser = async () => {
@@ -37,38 +37,42 @@ export default function MyBlogScreen () {
     });
   };
 
-  const signOut = async () => {
-    await auth.signOut();
-    dispatch({ type: "USER_SIGNOUT" });
-  };
-
   const getAllPosts = async () => {
     const dataPosts = await firestore
       .collection("posts")
       .where("userId", "==", userId)
       .onSnapshot((data) => setAllPosts(data.docs.map((doc) => doc.data())));
-
   };
 
+  
   return (
     <>
+      <Header
+        leftComponent={
+          <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+            <Text
+              style={{
+                fontSize: 18,
+                color: "#fff",
+                fontFamily: "openSansLight",
+              }}
+            >
+              Back
+            </Text>
+          </TouchableOpacity>
+        }
+        centerComponent={{
+          text: `My Blog`,
+          style: { color: "#fff", fontSize: 18, fontFamily: "openSansBold" },
+        }}
+      />
       <View style={styles.container}>
         <FlatList
           keyExtractor={(item, idx) => idx.toString()}
           data={allPosts}
-          renderItem={({ item }) =>(<MyBlogPost post={item} />)}
+          renderItem={({ item }) => <MyBlogPost post={item} />}
         />
       </View>
     </>
   );
 }
-
-const stylesText = StyleSheet.create({
-  tex: {
-    color: "blue",
-    fontSize: 70,
-    marginBottom: 20,
-    // marginHorizontal: 80,
-    alignItems: "center",
-  },
-});

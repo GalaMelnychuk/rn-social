@@ -1,17 +1,17 @@
 import React, { useState } from "react";
-import { Text, View, Image, TouchableOpacity, FlatList } from "react-native";
+import { Text, View, Image, TouchableOpacity, Alert } from "react-native";
 import AppCard from "./ui/AppCard";
 import MapModalWindow from "../components/MapModalWindow";
 import CommentsModalWindow from "./CommentsModalWindow";
 import { firestore } from "../../firebase/config";
 
-const Post = ({ post }) => {
+const Post = ({ post, deletePost }) => {
   const [showModal, setShowModal] = useState(false);
   const [showModalCmnts, setShowModalCmnts] = useState(false);
 
   const getCurrentUserPost = async (id) => {
     const data = await firestore.collection("posts").doc(id).get();
-    console.log('likes', post.id)
+    // console.log('likes', post.id)
 
     if (data.data().likes === "") {
       await data.data().likes == 0;
@@ -39,7 +39,9 @@ const Post = ({ post }) => {
         onCancelModal={() => setShowModal(false)}
       />
       <AppCard>
+        <TouchableOpacity onLongPress={()=> deletePost(post.id)}>
         <Text style={{ fontFamily: "openSansExtraBold" }}>{post.userName}</Text>
+        <Text style={{ fontFamily: "openSansLight", fontSize: 10, color: "#808080" }}>{post.date}</Text>
         <Text style={{ fontFamily: "openSansLight" }}>{post.description}</Text>
         <TouchableOpacity onLongPress={() => setShowModal(true)}>
           <Image
@@ -124,6 +126,7 @@ const Post = ({ post }) => {
             </View>
           </TouchableOpacity>
         </View>
+        </TouchableOpacity>
       </AppCard>
     </>
   );

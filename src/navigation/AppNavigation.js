@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
@@ -6,18 +6,11 @@ import HomeScreen from "../screens/tab/HomeScreen";
 import MyBlogScreen from "../screens/tab/MyBlogScreen";
 import PostsScreen from "../screens/tab/PostsScreen";
 import AddPostScreen from "../screens/tab/AddPostScreen";
-import {Header} from "react-native-elements";
-
-import LogOut from '../components/LogOut';
 
 const Tab = createBottomTabNavigator();
 
 export let content = (
   <>
-  <Header
-  placement="left"
-  rightComponent={LogOut}
-/>
   <Tab.Navigator
     tabBarOptions={{
       showLabel: true,
@@ -63,7 +56,7 @@ export let content = (
       name="AddPost"
       component={AddPostScreen}
     />
-    <Tab.Screen
+    {/* <Tab.Screen
       options={{
         tabBarIcon: ({ focused, size, color }) => (
           <Ionicons
@@ -75,7 +68,7 @@ export let content = (
       }}
       name="AllPosts"
       component={PostsScreen}
-    />
+    /> */}
   </Tab.Navigator>
   </>
 );

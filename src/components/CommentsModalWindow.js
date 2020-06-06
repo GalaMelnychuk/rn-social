@@ -7,7 +7,7 @@ import {
   TextInput,
   TouchableOpacity,
   Button,
-  View,
+  View, Alert, Keyboard
 } from "react-native";
 import Comment from "./Comment";
 import { firestore } from "../../firebase/config";
@@ -15,24 +15,29 @@ import { useSelector } from "react-redux";
 import { Header } from "react-native-elements";
 
 const CommentsModalWindow = ({ showModalCmnts, onCancelModalCmnts, post }) => {
-  const { userId, userName } = useSelector((state) => state.user);
+  const { userName } = useSelector((state) => state.user);
   const [textComment, setTextComment] = useState("");
 
-
-
   const addComment = async () => {
-    const postRef = await firestore.collection("posts").doc(post.id);
 
-    // Atomically add a new comment to the "comments" array field.
-    postRef.update({
-      comments: firebase.firestore.FieldValue.arrayUnion({
-        name: userName,
-        comment: textComment,
-        id: Date.now().toString(),
-      }),
-    });
-    setTextComment("");
-  };
+      if (textComment.trim()) {
+        const postRef = await firestore.collection("posts").doc(post.id);
+        // Atomically add a new comment to the "comments" array field.
+        postRef.update({
+          comments: firebase.firestore.FieldValue.arrayUnion({
+            name: userName,
+            comment: textComment,
+            id: Date.now().toString(),
+          }),
+        });
+        setTextComment("");
+        Keyboard.dismiss();
+      } else {
+        Alert.alert(
+          `Please, enter your comment`
+        );
+      }
+    };
 
   return (
     <Modal animationType="slide" visible={showModalCmnts} transparent={true}>

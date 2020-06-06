@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, View, TouchableOpacity, Text } from "react-native";
+import { TouchableOpacity, Text } from "react-native";
 import { useDispatch } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
 import { auth} from "../../firebase/config";
