@@ -1,17 +1,15 @@
 import React, { useState } from "react";
-
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import {Provider} from 'react-redux'
+import {Provider} from 'react-redux';
+import { AppLoading } from "expo";
 
 import { auth } from "./firebase/config";
-import RegisterScreen from "./src/screens/auth/RegisterScreen";
-import LogInScreen from "./src/screens/auth/LogInScreen";
 import { content } from "./src/navigation/AppNavigation";
-import {store} from './redux/store'
-
-import { AppLoading } from "expo";
+import {store} from './redux/store';
 import { loadApplication } from "./src/loadApplication/loadApp";
+import {RegisterScreen} from "./src/screens/auth/RegisterScreen";
+import {LogInScreen} from "./src/screens/auth/LogInScreen";
 
 const Stack = createStackNavigator();
 
@@ -42,7 +40,6 @@ export default function App() {
   }
 
   auth.onAuthStateChanged((user) => {
-    // console.log("onAuthStateChanged", user);
     setIsAuth(user);
   });
 

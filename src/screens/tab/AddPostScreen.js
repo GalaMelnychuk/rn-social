@@ -5,7 +5,7 @@ import {
   Text,
   View,
   Image,
-  Alert,
+  StyleSheet,
   TextInput,
 } from "react-native";
 import { useSelector } from "react-redux";
@@ -14,9 +14,10 @@ import { Camera } from "expo-camera";
 import * as Location from "expo-location";
 import { firestore, storage } from "../../../firebase/config";
 import { Header } from "react-native-elements";
-const moment = require('moment');
 
-export default function AddPostScreen() {
+const moment = require("moment");
+
+export const AddPostScreen = () => {
   const { userId, userName } = useSelector((state) => state.user);
   const [hasPermission, setHasPermission] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
@@ -81,7 +82,7 @@ export default function AddPostScreen() {
       comments: [],
       description: postDescription,
       likes: "",
-      date: moment().format('MMMM Do YYYY, h:mm:ss a')
+      date: moment().format("MMMM Do YYYY, h:mm:ss a"),
     });
     Keyboard.dismiss();
   };
@@ -89,81 +90,36 @@ export default function AddPostScreen() {
   return (
     <>
       <Header
-        // placement="left"
         centerComponent={{
           text: `New Post`,
-          style: { color: "#fff", fontSize: 18, fontFamily: "openSansBold" },
+          style: { ...styles.header },
         }}
         rightComponent={
-          <TouchableOpacity style={{}} onPress={() => setPicture("")}>
-            <View
-              style={{ borderColor: "#fff", borderWidth: 1, borderRadius: 6 }}
-            >
-              <Text
-                style={{
-                  fontSize: 18,
-                  paddingHorizontal: 4,
-                  color: "#fff",
-                  fontFamily: "openSansLight",
-                }}
-              >
-                re-photo
-              </Text>
+          <TouchableOpacity onPress={() => setPicture("")}>
+            <View style={styles.btnRePhoto}>
+              <Text style={styles.btnRePhotoText}>re-photo</Text>
             </View>
           </TouchableOpacity>
         }
       />
-      <View style={{ justifyContent: "center", alignItems: "center" }}>
+      <View style={styles.takePhotoContainer}>
         {picture ? (
           <>
-            <Image
-              source={{ uri: picture }}
-              style={{
-                width: 350,
-                height: 200,
-                margin: 8,
-                alignItems: "center",
-                justifyContent: "center",
-                borderRadius: 10,
-              }}
-            />
+            <Image source={{ uri: picture }} style={styles.camera} />
             <TextInput
-            multiline
+              multiline
               autoCapitalize={"none"}
               autoCorrect={false}
-              style={{
-                width: "75%",
-                borderWidth: 1,
-                borderColor: "#5f9ea0",
-                color: "#5f9ea0",
-                fontWeight: "600",
-                fontSize: 16,
-                backgroundColor: "#fff8dc",
-                borderRadius: 10,
-                padding: 10,
-              }}
+              style={styles.postInputDescription}
               onChangeText={(value) => setPostDescription(value)}
               value={postDescription}
               placeholder="Description..."
             />
             <TouchableOpacity
-              style={{
-                backgroundColor: "red",
-                padding: 8,
-                margin: 18,
-                borderRadius: 4,
-              }}
+              style={styles.btnAddPost}
               onPress={() => handlerlUpload(picture)}
             >
-              <Text
-                style={{
-                  fontSize: 18,
-                  color: "#000",
-                  fontFamily: "openSansLight",
-                }}
-              >
-                ADD POST
-              </Text>
+              <Text style={styles.textBtnAddPost}>ADD POST</Text>
             </TouchableOpacity>
           </>
         ) : (
@@ -190,13 +146,7 @@ export default function AddPostScreen() {
                   }}
                 >
                   <Image
-                    style={{
-                      width: 50,
-                      height: 50,
-                      borderRadius: 50,
-                      marginTop: 14,
-                      marginRight: 6,
-                    }}
+                    style={styles.flipCamera}
                     source={{
                       uri:
                         "https://cdn.dribbble.com/users/100396/screenshots/1220329/flipiconn.png",
@@ -207,14 +157,7 @@ export default function AddPostScreen() {
             </Camera>
             <TouchableOpacity onPress={snap}>
               <Image
-                style={{
-                  width: 120,
-                  height: 120,
-                  borderRadius: 50,
-                  marginTop: 40,
-
-                  // marginLeft: 6,
-                }}
+                style={styles.snapCamera}
                 source={{
                   uri:
                     "https://cdn1.iconfinder.com/data/icons/hand-holding-device/512/849-08-512.png",
@@ -227,3 +170,66 @@ export default function AddPostScreen() {
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  header: {
+    color: "#fff",
+    fontSize: 18,
+    fontFamily: "openSansBold",
+  },
+  btnRePhoto: {
+    borderColor: "#fff",
+    borderWidth: 1,
+    borderRadius: 6,
+  },
+  btnRePhotoText: {
+    fontSize: 14,
+    paddingHorizontal: 4,
+    color: "#fff",
+    fontFamily: "openSansLight",
+  },
+  takePhotoContainer: { justifyContent: "center", alignItems: "center" },
+  camera: {
+    width: 350,
+    height: 200,
+    margin: 8,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 10,
+  },
+  postInputDescription: {
+    width: "75%",
+    borderWidth: 1,
+    borderColor: "#5f9ea0",
+    color: "#5f9ea0",
+    fontWeight: "600",
+    fontSize: 16,
+    backgroundColor: "#fff8dc",
+    borderRadius: 10,
+    padding: 10,
+  },
+  btnAddPost: {
+    backgroundColor: "red",
+    padding: 8,
+    margin: 18,
+    borderRadius: 4,
+  },
+  textBtnAddPost: {
+    fontSize: 18,
+    color: "#000",
+    fontFamily: "openSansLight",
+  },
+  flipCamera: {
+    width: 50,
+    height: 50,
+    borderRadius: 50,
+    marginTop: 14,
+    marginRight: 6,
+  },
+  snapCamera: {
+    width: 120,
+    height: 120,
+    borderRadius: 50,
+    marginTop: 40,
+  },
+});

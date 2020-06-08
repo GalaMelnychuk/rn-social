@@ -1,13 +1,14 @@
-import React, { useState } from "react";
+import React from "react";
 import { useSelector } from "react-redux";
 import { firestore } from "../../firebase/config";
-import { Text, TouchableOpacity, View, Alert } from "react-native";
+import { Text, TouchableOpacity, View, Alert, StyleSheet } from "react-native";
 
-const Comment = ({ comment, post }) => {
+export const Comment = ({ comment, post }) => {
   const { userName } = useSelector((state) => state.user);
+  const { name, text, id } = comment;
 
   const removeComment = () => {
-    if (userName !== comment.name) {
+    if (userName !== name) {
       return;
     } else {
       Alert.alert(
@@ -27,11 +28,10 @@ const Comment = ({ comment, post }) => {
                 .get();
               const newCommentsArr = await data
                 .data()
-                .comments.filter((elem) => elem.id !== comment.id);
+                .comments.filter((elem) => elem.id !== id);
               await firestore.collection("posts").doc(post.id).update({
                 comments: newCommentsArr,
               });
-              console.log('post.id', post.id)
             },
           },
         ],
@@ -42,26 +42,24 @@ const Comment = ({ comment, post }) => {
 
   return (
     <TouchableOpacity onLongPress={removeComment}>
-      <View
-        style={{
-          margin: 10,
-        }}
-      >
-        <Text style={{ fontFamily: "openSansExtraBold" }}>{comment.name}</Text>
-        <Text
-          style={{
-            fontSize: 14,
-            justifyContent: "center",
-            alignItems: "center",
-            fontFamily: "openSansRegular",
-            paddingLeft: 16,
-          }}
-        >
-          {comment.comment}
-        </Text>
+      <View style={styles.container}>
+        <Text style={styles.userName}>{name}</Text>
+        <Text style={styles.textComm}>{text}</Text>
       </View>
     </TouchableOpacity>
   );
 };
 
-export default Comment;
+const styles = StyleSheet.create({
+  container: {
+    margin: 10,
+  },
+  userName: { fontFamily: "openSansExtraBold" },
+  textComm: {
+    fontSize: 14,
+    justifyContent: "center",
+    alignItems: "center",
+    fontFamily: "openSansRegular",
+    paddingLeft: 16,
+  },
+});

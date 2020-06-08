@@ -1,21 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { View, FlatList, Alert } from "react-native";
+import { View, FlatList, StyleSheet } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { styles } from "../../../Styles";
 import { auth, firestore } from "../../../firebase/config";
 import { Header } from "react-native-elements";
-import LogOut from "../../components/LogOut";
-import Post from "../../components/Post";
+import { LogOut } from "../../components/LogOut";
+import { Post } from "../../components/Post";
 
-export default function HomeScreen() {
+export const HomeScreen = () => {
   const dispatch = useDispatch();
   const [allPosts, setAllPosts] = useState([]);
   const { userId, userName } = useSelector((state) => state.user);
 
   useEffect(() => {
     currentUser();
-  }, [userId]);
-  
+  }, []);
 
   const currentUser = async () => {
     const currentUser = await auth.currentUser;
@@ -39,7 +37,7 @@ export default function HomeScreen() {
       <Header
         centerComponent={{
           text: `Hello, ${userName}!`,
-          style: { color: "#fff", fontSize: 18, fontFamily: "openSansBold" },
+          style: { ...styles.header },
         }}
         rightComponent={LogOut}
       />
@@ -47,9 +45,18 @@ export default function HomeScreen() {
         <FlatList
           keyExtractor={(item, idx) => idx.toString()}
           data={allPosts}
-          renderItem={({ item }) => <Post deletePost={deletePost} post={item} />}
+          renderItem={({ item }) => <Post post={item} />}
         />
       </View>
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  header: { color: "#fff", fontSize: 18, fontFamily: "openSansBold" },
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    justifyContent: "center",
+  },
+});

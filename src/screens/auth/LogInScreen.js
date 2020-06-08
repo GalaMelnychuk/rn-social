@@ -3,20 +3,29 @@ import {
   TouchableOpacity,
   Text,
   View,
-  TextInput, KeyboardAvoidingView, Platform
+  Alert,
+  TextInput,
+  KeyboardAvoidingView,
+  Keyboard,
+  Platform,
 } from "react-native";
-import { styles } from "../../../Styles";
-import {auth} from '../../../firebase/config'
+import { styles } from "./styles";
+import { auth } from "../../../firebase/config";
 
-export default function LogInScreen({ navigation: {navigate} }) {
+export const  LogInScreen = ({ navigation: { navigate } }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-// логанизация юзера
   const logInUser = async () => {
-    try { await auth.signInWithEmailAndPassword(email, password);
-    } catch (error) {
-      console.log(error);
+    if (email.trim() && password.trim()) {
+      try {
+        await auth.signInWithEmailAndPassword(email, password);
+      } catch (error) {
+        console.log(error);
+      }
+      Keyboard.dismiss();
+    } else {
+      Alert.alert(`Please, fill the required fields`);
     }
   };
 
@@ -31,7 +40,7 @@ export default function LogInScreen({ navigation: {navigate} }) {
           autoCapitalize={"none"}
           autoCorrect={false}
           style={styles.input}
-          onChangeText={value => setEmail(value)}
+          onChangeText={(value) => setEmail(value)}
           value={email}
         />
         <Text style={styles.text}>Password*</Text>
@@ -40,26 +49,26 @@ export default function LogInScreen({ navigation: {navigate} }) {
           autoCorrect={false}
           style={styles.input}
           secureTextEntry={true}
-          onChangeText={value => setPassword(value)}
+          onChangeText={(value) => setPassword(value)}
           value={password}
         />
-{/* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */}
-        <TouchableOpacity
-          onPress={logInUser}
-          activeOpacity={0.5}
-          style={styles.button}
-        >
-          <Text style={styles.buttonTitle}>Log In</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => navigate("Register")}
-          activeOpacity={0.5}
-          style={styles.button}
-          style={styles.buttonTitle}
-        >
-          <Text style={styles.buttonTitle}>Register</Text>
-        </TouchableOpacity>
+        <View style={styles.btnsLogInScreen}>
+          <TouchableOpacity
+            onPress={logInUser}
+            activeOpacity={0.5}
+            style={styles.btnAuth}
+          >
+            <Text style={styles.btnTitle}>Log In</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => navigate("Register")}
+            activeOpacity={0.5}
+            style={styles.btnTitle}
+          >
+            <Text style={styles.btnTitle}>Register</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </KeyboardAvoidingView>
   );
-};
+}

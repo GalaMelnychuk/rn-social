@@ -2,22 +2,22 @@ import React, { useState, useEffect } from "react";
 import {
   TouchableOpacity,
   Text,
-  View, Alert,
+  View,
+  StyleSheet,
   FlatList,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { Header } from "react-native-elements";
 import { useNavigation } from "@react-navigation/native";
-import { styles } from "../../../Styles";
 import { auth, firestore } from "../../../firebase/config";
 
-import MyBlogPost from "../../components/MyBlogPost";
+import {Post} from "../../components/Post";
 
-export default function MyBlogScreen() {
+export const MyBlogScreen = () => {
   const dispatch = useDispatch();
   const [allPosts, setAllPosts] = useState([]);
   const navigation = useNavigation();
-  const { userId, userPosts } = useSelector((state) => state.user);
+  const { userId } = useSelector((state) => state.user);
 
   useEffect(() => {
     currentUser();
@@ -44,35 +44,40 @@ export default function MyBlogScreen() {
       .onSnapshot((data) => setAllPosts(data.docs.map((doc) => doc.data())));
   };
 
-  
   return (
     <>
       <Header
         leftComponent={
           <TouchableOpacity onPress={() => navigation.navigate("Home")}>
-            <Text
-              style={{
-                fontSize: 18,
-                color: "#fff",
-                fontFamily: "openSansLight",
-              }}
-            >
-              Back
-            </Text>
+            <Text style={styles.btnTextBack}>Back</Text>
           </TouchableOpacity>
         }
         centerComponent={{
           text: `My Blog`,
-          style: { color: "#fff", fontSize: 18, fontFamily: "openSansBold" },
+          style: { ...styles.header },
         }}
       />
       <View style={styles.container}>
         <FlatList
           keyExtractor={(item, idx) => idx.toString()}
           data={allPosts}
-          renderItem={({ item }) => <MyBlogPost post={item} />}
+          renderItem={({ item }) => <Post post={item} />}
         />
       </View>
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  btnTextBack: {
+    fontSize: 18,
+    color: "#fff",
+    fontFamily: "openSansLight",
+  },
+  header: { color: "#fff", fontSize: 18, fontFamily: "openSansBold" },
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    justifyContent: "center",
+  },
+});
