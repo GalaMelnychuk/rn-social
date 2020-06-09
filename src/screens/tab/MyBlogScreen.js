@@ -5,13 +5,14 @@ import {
   View,
   StyleSheet,
   FlatList,
+  ImageBackground,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { Header } from "react-native-elements";
 import { useNavigation } from "@react-navigation/native";
 import { auth, firestore } from "../../../firebase/config";
 
-import {Post} from "../../components/Post";
+import { MyBlogPost } from "../../components/MyBlogPost";
 
 export const MyBlogScreen = () => {
   const dispatch = useDispatch();
@@ -41,9 +42,30 @@ export const MyBlogScreen = () => {
     const dataPosts = await firestore
       .collection("posts")
       .where("userId", "==", userId)
-      .onSnapshot((data) => setAllPosts(data.docs.map((doc) => doc.data())));
+      .onSnapshot((data) =>
+        setAllPosts(
+          data.docs.map((doc) => {
+            // console.log('doc.id', doc.id)
+            return { ...doc.data(), id: doc.id };
+          })
+        )
+      );
   };
 
+  let content = (
+    <FlatList
+      keyExtractor={(item, idx) => idx.toString()}
+      data={allPosts}
+      renderItem={({ item }) => <MyBlogPost post={item} />}
+    />
+  );
+
+  if (allPosts.length === 0) {
+    content = <ImageBackground style={{width: 500, height: "100%"}} source={{uri:"https://www.incimages.com/uploaded_files/image/1024x576/getty_129714169_970647970450041_54251.jpg"}}>
+      <Text style={styles.contentText}>Add Your First Post</Text>
+    </ImageBackground>
+  }
+  
   return (
     <>
       <Header
@@ -57,16 +79,10 @@ export const MyBlogScreen = () => {
           style: { ...styles.header },
         }}
       />
-      <View style={styles.container}>
-        <FlatList
-          keyExtractor={(item, idx) => idx.toString()}
-          data={allPosts}
-          renderItem={({ item }) => <Post post={item} />}
-        />
-      </View>
+      <View style={styles.container}>{content}</View>
     </>
   );
-}
+};
 
 const styles = StyleSheet.create({
   btnTextBack: {
@@ -80,4 +96,11 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     justifyContent: "center",
   },
+  contentText: {
+    fontFamily: "openSansSemiBold",
+    paddingLeft: 30,
+    paddingTop: 60,
+    fontSize: 25,
+    color: "#fff"
+  }
 });

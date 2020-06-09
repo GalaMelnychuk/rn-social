@@ -1,10 +1,10 @@
 {
-  "devToolsPort": 19003,
+  "devToolsPort": 19002,
   "expoServerPort": 19000,
   "packagerPort": 19001,
-  "packagerPid": 61299,
+  "packagerPid": 70335,
   "expoServerNgrokUrl": "https://6b-dfc.anonymous.rn-social.exp.direct",
   "packagerNgrokUrl": "https://packager.6b-dfc.anonymous.rn-social.exp.direct",
-  "ngrokPid": 61309,
+  "ngrokPid": 70357,
   "webpackServerPort": 19006
 }
